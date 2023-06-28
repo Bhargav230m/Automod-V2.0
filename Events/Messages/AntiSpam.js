@@ -29,6 +29,11 @@ module.exports = {
       Guild: guild.id,
       User: message.author.id,
     });
+    if (!requireDB) return;
+    if (requireDB.AntiSpam === false) return;
+    
+    const logChannel = client.channels.cache.get(requireDB.LogChannel);
+    
     if (!UserData) {
       const newData = new UserAM({
         Guild: guild.id,
@@ -36,28 +41,11 @@ module.exports = {
         InfractionPoints: 0,
       });
       newData.save();
-    } else {
-      if (UserData.InfractionPoints > 10) {
-        if (!message.member) return;
-        message.member.ban({ reason: "Bypassing automod" });
-        logChannel.send({
-          embeds: [
-            new EmbedBuilder()
-              .setColor("0x2f3136")
-              .setDescription(
-                `<@${message.author.id}> has been banned for bypassing automod`
-              ),
-          ],
-        });
-      }
     }
-    if (!requireDB) return;
-    if (requireDB.AntiSpam === false) return;
 
     const embed = new EmbedBuilder()
       .setColor("0x2f3136")
       .setDescription(`:warning: | <@${message.author.id}> is spamming`);
-    const logChannel = client.channels.cache.get(requireDB.LogChannel);
 
     // Define the number of messages a user can send in a given time interval
     const maxMessageCount = 5;
