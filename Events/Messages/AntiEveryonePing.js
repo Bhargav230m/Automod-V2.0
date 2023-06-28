@@ -33,20 +33,6 @@ module.exports = {
         InfractionPoints: 0,
       });
       newData.save();
-    } else {
-      if (UserData.InfractionPoints > 10) {
-        if (!message.member) return;
-        message.member.ban({ reason: "Bypassing automod" });
-        logChannel.send({
-          embeds: [
-            new EmbedBuilder()
-              .setColor("0x2f3136")
-              .setDescription(
-                `<@${message.author.id}> has been banned for bypassing automod`
-              ),
-          ],
-        });
-      }
     }
 
     const embed = new EmbedBuilder()
